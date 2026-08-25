@@ -1,6 +1,9 @@
 #dbs prediction - v2
 
 from flask import Flask, render_template, request
+import joblib
+
+modelPKL = joblib.load("DBS_SingDollar.pkl")
 
 app = Flask(__name__)
 
@@ -16,7 +19,13 @@ def main():
 def dbs():
     return(render_template("dbs.html"))
 
+@app.route("/DBSresult",methods=["GET","POST"])
+def DBSresult():
+    q = float(request.form.get("q"))
+    r = modelPKL.predict([[q]])
+    return(render_template("DBSresult.html",r=r))
+
 if __name__ == "__main__":
-    app.run(port=1234)
+    app.run()
 
 
